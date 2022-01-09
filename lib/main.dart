@@ -66,11 +66,12 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/image/guess_logo.png', width: 150),
+                    SizedBox(width: 8,),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '  GUESS',
+                          'GUESS',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 44.0,
@@ -78,7 +79,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '   THE NUMBER',
+                          'THE NUMBER',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.0,

@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
           //alignment: Alignment.topCenter,
           child: Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               //จัดวางในแนวตั้ง เพราะอยู่ใน column
               //crossAxisAlignment: CrossAxisAlignment.center, //จัดวางในแนวขวาง
               children: [

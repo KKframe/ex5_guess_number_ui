@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart'; //เอาไว้ import StatelessWidget
+import 'package:flutter/material.dart';
+
+import 'game.dart'; //เอาไว้ import StatelessWidget
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      home: const HomePage(), //พารามิเตอร์ home สำคัญสุด
+      home: HomePage(), //พารามิเตอร์ home สำคัญสุด
     );
   }
 }
@@ -25,8 +27,11 @@ class MyApp extends StatelessWidget {
 //stateful Widget = หน้า UI ที่react ตามผู้ใช้งาน
 //stateless Widget หน้า UI ที่ไม่ได้ react ตามผู้ใช้งาน(หน้า ui นิ่งๆ)
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+  HomePage({Key? key}) : super(key: key);
+  final TextEditingController _controller =
+      TextEditingController(); //ตั้งตัวแปรระดับคลาส
+  var game = Game();
+  var isCorrect = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,51 +67,98 @@ class HomePage extends StatelessWidget {
               //จัดวางในแนวตั้ง เพราะอยู่ใน column
               //crossAxisAlignment: CrossAxisAlignment.center, //จัดวางในแนวขวาง
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/image/guess_logo.png', width: 150),
-                    SizedBox(width: 8,),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'GUESS',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 44.0,
-                            color: Colors.amber.shade800,
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/image/guess_logo.png', width: 150),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'GUESS',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 44.0,
+                              color: Colors.amber.shade800,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'THE NUMBER',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.amber.shade600,
+                          Text(
+                            'THE NUMBER',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.amber.shade600,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
+
                 //tip :Alt+Enter=to wrap
-                SizedBox(
+                /*SizedBox(
                   height: 20,
+                ),*/
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    controller: _controller,
+
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: TextField(),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    //โค้ดที่จะทำงานเมื่อกดปุ่ม
-                  },
-                  child: Text(
-                    'GUESS',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if(isCorrect){
+                        game = Game();
+                        isCorrect = false;
+                      }
+                      //โค้ดที่จะทำงานเมื่อกดปุ่ม
+                      var input = _controller.text;
+                      var guess = int.tryParse(input);
+                      var txt = '';
+
+                      if (guess != null) {
+                        var result = game.doGuess(guess);
+                        if (result == 1) {
+                          txt = '$guess TOO HIGH 🔼 Try again. ';
+                        }else if(result == -1) {
+                          txt = '$guess TOO LOW 🔽 Try again. ';
+                        }else if (result == 0) {
+                          txt = 'Very good 👏 👏 \n $guess is CORRECT  ❤ , total guesses: ' +
+                      (game.guessCount).toString();
+                          isCorrect = true;
+                        }
+                        showDialog(context: context, builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text('RESULT'),
+                            content:Text(txt),
+                          );
+                        });
+                      }else{
+                        showDialog(context: context, builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text('❌ ERROR ❌'),
+                            content:Text('Please enter only numbers between 1 and 100'),
+                          );
+                        });
+                      }
+
+                    },
+                    child: Text(
+                      'GUESS',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

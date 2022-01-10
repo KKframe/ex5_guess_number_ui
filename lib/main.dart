@@ -110,6 +110,12 @@ class HomePage extends StatelessWidget {
                   child: TextField(
                     textAlign: TextAlign.center,
                     controller: _controller,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.7),
+                      border: OutlineInputBorder(),
+                      hintText: 'Guess number between 1 and 100',
+                    ),
 
                   ),
                 ),
@@ -129,9 +135,9 @@ class HomePage extends StatelessWidget {
                       if (guess != null) {
                         var result = game.doGuess(guess);
                         if (result == 1) {
-                          txt = '$guess TOO HIGH 🔼 Try again. ';
+                          txt = '$guess is TOO HIGH 🔼 Try again. ';
                         }else if(result == -1) {
-                          txt = '$guess TOO LOW 🔽 Try again. ';
+                          txt = '$guess is TOO LOW 🔽 Try again. ';
                         }else if (result == 0) {
                           txt = 'Very good 👏 👏 \n $guess is CORRECT  ❤ , total guesses: ' +
                       (game.guessCount).toString();
@@ -141,13 +147,29 @@ class HomePage extends StatelessWidget {
                           return AlertDialog(
                             title: Text('RESULT'),
                             content:Text(txt),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
                           );
                         });
                       }else{
                         showDialog(context: context, builder: (BuildContext context){
                           return AlertDialog(
                             title: Text('❌ ERROR ❌'),
-                            content:Text('Please enter only numbers between 1 and 100'),
+                            content:Text('Invalid input! \n Please enter only numbers '),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
                           );
                         });
                       }
